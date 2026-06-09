@@ -10,9 +10,12 @@ struct HomeView: View {
             Spacer(minLength: 40)
 
             VStack(spacing: 12) {
-                Image(systemName: "doc.viewfinder")
-                    .font(.system(size: 46, weight: .light))
-                    .foregroundStyle(.secondary)
+                Image("FormaLogo")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 76, height: 76)
+                    .clipShape(RoundedRectangle(cornerRadius: 17, style: .continuous))
+                    .shadow(color: .black.opacity(0.18), radius: 12, y: 5)
 
                 Text("Forma")
                     .font(.largeTitle.weight(.semibold))
