@@ -28,14 +28,6 @@ struct HomeView: View {
             dropZone
 
             HStack(spacing: 10) {
-                Button {
-                    Task { await appState.openFile() }
-                } label: {
-                    Label("Open File", systemImage: "folder")
-                }
-                .buttonStyle(.borderedProminent)
-                .controlSize(.large)
-
                 HStack(spacing: 8) {
                     Image(systemName: "globe")
                         .foregroundStyle(.secondary)
@@ -53,7 +45,7 @@ struct HomeView: View {
                     .disabled(urlString.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
                 }
                 .padding(.horizontal, 12)
-                .frame(width: 360, height: 38)
+                .frame(width: 560, height: 38)
                 .background(.quaternary.opacity(0.55), in: RoundedRectangle(cornerRadius: 10, style: .continuous))
             }
 
@@ -90,6 +82,10 @@ struct HomeView: View {
         }
         .frame(maxWidth: 560, minHeight: 150)
         .background(.thinMaterial, in: RoundedRectangle(cornerRadius: 18, style: .continuous))
+        .contentShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
+        .onTapGesture {
+            Task { await appState.openFile() }
+        }
         .overlay {
             RoundedRectangle(cornerRadius: 18, style: .continuous)
                 .strokeBorder(appState.isDropTargeted ? Color.accentColor : Color.secondary.opacity(0.25), lineWidth: 1.4)

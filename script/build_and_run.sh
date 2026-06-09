@@ -3,6 +3,7 @@ set -euo pipefail
 
 MODE="${1:-run}"
 APP_NAME="Forma"
+APP_VERSION="0.1.1"
 BUNDLE_ID="dev.codex.Forma"
 MIN_SYSTEM_VERSION="14.0"
 
@@ -44,6 +45,10 @@ cat >"$INFO_PLIST" <<PLIST
   <string>$BUNDLE_ID</string>
   <key>CFBundleName</key>
   <string>$APP_NAME</string>
+  <key>CFBundleShortVersionString</key>
+  <string>$APP_VERSION</string>
+  <key>CFBundleVersion</key>
+  <string>$APP_VERSION</string>
   <key>CFBundleIconFile</key>
   <string>Forma</string>
   <key>CFBundlePackageType</key>
