@@ -12,6 +12,7 @@ final class AppState: ObservableObject {
     private let recentItemsKey = "recentItems"
     private let loader = FileLoader()
     private let detector = ContentDetector()
+    private let fileAssociationManager = FileAssociationManager()
 
     init() {
         loadRecentItems()
@@ -23,6 +24,10 @@ final class AppState: ObservableObject {
         }
 
         openFile(at: fileURL)
+    }
+
+    func requestFileAssociationSetupIfNeeded() {
+        fileAssociationManager.requestSetupIfNeeded()
     }
 
     func openFile(at fileURL: URL) {

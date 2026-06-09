@@ -3,7 +3,7 @@ set -euo pipefail
 
 MODE="${1:-run}"
 APP_NAME="Forma"
-APP_VERSION="0.1.2"
+APP_VERSION="0.1.3"
 BUNDLE_ID="dev.codex.Forma"
 MIN_SYSTEM_VERSION="14.0"
 
@@ -64,6 +64,7 @@ cat >"$INFO_PLIST" <<PLIST
       <array>
         <string>public.content</string>
         <string>public.data</string>
+        <string>public.item</string>
         <string>public.text</string>
         <string>public.plain-text</string>
         <string>public.rtf</string>

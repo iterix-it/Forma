@@ -6,57 +6,61 @@ struct HomeView: View {
     @State private var urlString = ""
 
     var body: some View {
-        VStack(spacing: 28) {
-            Spacer(minLength: 40)
+        ZStack {
+            homeBackground
 
-            VStack(spacing: 12) {
-                Image("FormaLogo")
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: 76, height: 76)
-                    .clipShape(RoundedRectangle(cornerRadius: 17, style: .continuous))
-                    .shadow(color: .black.opacity(0.18), radius: 12, y: 5)
+            VStack(spacing: 28) {
+                Spacer(minLength: 40)
 
-                Text("Forma")
-                    .font(.largeTitle.weight(.semibold))
+                VStack(spacing: 12) {
+                    Image("FormaLogo")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 76, height: 76)
+                        .clipShape(RoundedRectangle(cornerRadius: 17, style: .continuous))
+                        .shadow(color: .black.opacity(0.18), radius: 12, y: 5)
 
-                Text("Open files and web pages with native Apple viewers.")
-                    .font(.callout)
-                    .foregroundStyle(.secondary)
-            }
+                    Text("Forma")
+                        .font(.largeTitle.weight(.semibold))
 
-            dropZone
-
-            HStack(spacing: 10) {
-                HStack(spacing: 8) {
-                    Image(systemName: "globe")
+                    Text("Open files and web pages with native Apple viewers.")
+                        .font(.callout)
                         .foregroundStyle(.secondary)
-
-                    TextField("Open URL", text: $urlString)
-                        .textFieldStyle(.plain)
-                        .onSubmit(openURL)
-
-                    Button {
-                        openURL()
-                    } label: {
-                        Image(systemName: "arrow.right.circle.fill")
-                    }
-                    .buttonStyle(.plain)
-                    .disabled(urlString.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
                 }
-                .padding(.horizontal, 12)
-                .frame(width: 560, height: 38)
-                .background(.quaternary.opacity(0.55), in: RoundedRectangle(cornerRadius: 10, style: .continuous))
-            }
 
-            if !appState.recentItems.isEmpty {
-                recentList
-                    .frame(maxWidth: 560)
-            }
+                dropZone
 
-            Spacer(minLength: 40)
+                HStack(spacing: 10) {
+                    HStack(spacing: 8) {
+                        Image(systemName: "globe")
+                            .foregroundStyle(.secondary)
+
+                        TextField("Open URL", text: $urlString)
+                            .textFieldStyle(.plain)
+                            .onSubmit(openURL)
+
+                        Button {
+                            openURL()
+                        } label: {
+                            Image(systemName: "arrow.right.circle.fill")
+                        }
+                        .buttonStyle(.plain)
+                        .disabled(urlString.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
+                    }
+                    .padding(.horizontal, 12)
+                    .frame(width: 560, height: 38)
+                    .background(.quaternary.opacity(0.55), in: RoundedRectangle(cornerRadius: 10, style: .continuous))
+                }
+
+                if !appState.recentItems.isEmpty {
+                    recentList
+                        .frame(maxWidth: 560)
+                }
+
+                Spacer(minLength: 40)
+            }
+            .padding(32)
         }
-        .padding(32)
         .alert("Cannot Open Content", isPresented: errorBinding) {
             Button("OK", role: .cancel) {
                 appState.errorMessage = nil
@@ -64,6 +68,42 @@ struct HomeView: View {
         } message: {
             Text(appState.errorMessage ?? "")
         }
+    }
+
+    private var homeBackground: some View {
+        ZStack {
+            LinearGradient(
+                colors: [
+                    Color(red: 0.05, green: 0.05, blue: 0.06),
+                    Color(red: 0.09, green: 0.09, blue: 0.11),
+                    Color(red: 0.02, green: 0.02, blue: 0.025)
+                ],
+                startPoint: .topLeading,
+                endPoint: .bottomTrailing
+            )
+
+            RadialGradient(
+                colors: [
+                    Color(red: 0.39, green: 0.25, blue: 0.96).opacity(0.24),
+                    Color(red: 0.20, green: 0.14, blue: 0.78).opacity(0.08),
+                    .clear
+                ],
+                center: .top,
+                startRadius: 20,
+                endRadius: 420
+            )
+
+            RadialGradient(
+                colors: [
+                    Color(red: 0.33, green: 0.24, blue: 0.92).opacity(0.12),
+                    .clear
+                ],
+                center: .bottomTrailing,
+                startRadius: 80,
+                endRadius: 520
+            )
+        }
+        .ignoresSafeArea()
     }
 
     private var dropZone: some View {

@@ -1,5 +1,23 @@
 # Changelog
 
+## Forma 0.1.3
+
+### Highlights
+
+- Added a first-launch setup flow for choosing which file types Forma should open by default.
+- Added support for making Forma the default macOS viewer for selected file types.
+- Added broader document type registration for all-file handling.
+- Added the new home background.
+- Updated bundle metadata to version 0.1.3.
+
+### Download
+
+Download `Forma-0.1.3.dmg`, open it, and drag `Forma.app` into Applications.
+
+### Notes
+
+This build is ad-hoc signed and not notarized yet. macOS Gatekeeper may show a warning the first time you open it.
+
 ## Forma 0.1.2
 
 ### Highlights

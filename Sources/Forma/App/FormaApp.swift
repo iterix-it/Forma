@@ -65,6 +65,7 @@ struct FormaApp: App {
                     appDelegate.setOpenFilesHandler { fileURLs in
                         appState.openFiles(at: fileURLs)
                     }
+                    appState.requestFileAssociationSetupIfNeeded()
                 }
         }
         .windowStyle(.hiddenTitleBar)
