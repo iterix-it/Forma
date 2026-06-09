@@ -15,7 +15,10 @@ let package = Package(
     ],
     targets: [
         .executableTarget(
-            name: "Forma"
+            name: "Forma",
+            resources: [
+                .process("Resources")
+            ]
         )
     ]
 )
