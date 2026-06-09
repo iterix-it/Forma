@@ -1,6 +1,44 @@
+# Codex/local harness files
+.codex/
+work/
+
+# Swift Package Manager / build output
 .build/
+Packages/
+Package.resolved
+
+# Local app packaging output
 dist/
 outputs/
+*.app
+*.dmg
+
+# macOS Finder noise
 .DS_Store
-*.xcuserdata/
+
+# Xcode local state
 DerivedData/
+*.xcuserdata/
+*.xcuserstate
+*.xcworkspace/xcuserdata/
+*.xcodeproj/xcuserdata/
+
+# Local environment and secrets
+.env
+.env.*
+*.pem
+*.key
+*.p8
+*.p12
+*.cer
+*.crt
+*.mobileprovision
+*.provisionprofile
+*.xcconfig
+*.entitlements.local
+
+# Logs and temporary files
+*.log
+*.tmp
+*.swp
+*.swo
