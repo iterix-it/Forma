@@ -4,6 +4,7 @@ struct TextViewer: View {
     let url: URL
     let kind: ContentKind
     let searchText: String
+    let zoomScale: Double
 
     @State private var text = ""
     @State private var errorMessage: String?
@@ -16,7 +17,7 @@ struct TextViewer: View {
                 VStack(spacing: 0) {
                     searchSummary
 
-                    MarkdownViewer(text: text)
+                    MarkdownViewer(text: text, zoomScale: zoomScale)
                 }
             } else {
                 VStack(spacing: 0) {
@@ -24,7 +25,7 @@ struct TextViewer: View {
 
                     ScrollView([.vertical, .horizontal]) {
                         Text(text)
-                            .font(.system(.body, design: .monospaced))
+                            .font(.system(size: 13 * zoomScale, design: .monospaced))
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .textSelection(.enabled)
                             .padding(28)

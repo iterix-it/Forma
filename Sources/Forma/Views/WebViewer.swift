@@ -3,6 +3,7 @@ import WebKit
 
 struct WebViewer: NSViewRepresentable {
     let url: URL
+    let zoomScale: Double
 
     func makeNSView(context: Context) -> WKWebView {
         let configuration = WKWebViewConfiguration()
@@ -12,6 +13,8 @@ struct WebViewer: NSViewRepresentable {
     }
 
     func updateNSView(_ nsView: WKWebView, context: Context) {
+        nsView.pageZoom = zoomScale
+
         if nsView.url != url {
             nsView.load(URLRequest(url: url))
         }

@@ -4,6 +4,7 @@ import SwiftUI
 struct PDFViewer: NSViewRepresentable {
     let url: URL
     let searchText: String
+    let zoomScale: Double
 
     func makeNSView(context: Context) -> PDFView {
         let pdfView = PDFView()
@@ -15,6 +16,8 @@ struct PDFViewer: NSViewRepresentable {
     }
 
     func updateNSView(_ nsView: PDFView, context: Context) {
+        updateScale(in: nsView)
+
         guard nsView.document?.documentURL != url else {
             updateSearch(in: nsView)
             return
@@ -22,6 +25,10 @@ struct PDFViewer: NSViewRepresentable {
 
         nsView.document = PDFDocument(url: url)
         updateSearch(in: nsView)
+    }
+
+    private func updateScale(in pdfView: PDFView) {
+        pdfView.scaleFactor = pdfView.scaleFactorForSizeToFit * zoomScale
     }
 
     private func updateSearch(in pdfView: PDFView) {

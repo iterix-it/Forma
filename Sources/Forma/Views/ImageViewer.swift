@@ -3,6 +3,7 @@ import SwiftUI
 
 struct ImageViewer: View {
     let url: URL
+    let zoomScale: Double
 
     @State private var image: NSImage?
 
@@ -13,6 +14,7 @@ struct ImageViewer: View {
                     Image(nsImage: image)
                         .resizable()
                         .scaledToFit()
+                        .scaleEffect(zoomScale)
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
                         .padding(24)
                 }

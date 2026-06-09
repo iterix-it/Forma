@@ -2,6 +2,7 @@ import SwiftUI
 
 struct MarkdownViewer: View {
     let text: String
+    let zoomScale: Double
 
     private var blocks: [MarkdownBlock] {
         MarkdownParser(text: text).parse()
@@ -11,7 +12,7 @@ struct MarkdownViewer: View {
         ScrollView {
             LazyVStack(alignment: .leading, spacing: 10) {
                 ForEach(Array(blocks.enumerated()), id: \.offset) { _, block in
-                    MarkdownBlockView(block: block)
+                    MarkdownBlockView(block: block, zoomScale: zoomScale)
                 }
             }
             .frame(maxWidth: .infinity, alignment: .leading)
@@ -22,6 +23,7 @@ struct MarkdownViewer: View {
 
 private struct MarkdownBlockView: View {
     let block: MarkdownBlock
+    let zoomScale: Double
 
     var body: some View {
         switch block {
@@ -35,20 +37,20 @@ private struct MarkdownBlockView: View {
                 .padding(.bottom, level <= 2 ? 3 : 1)
         case let .paragraph(text):
             Text(attributedText(text))
-                .font(.body)
-                .lineSpacing(4)
+                .font(scaledFont(13))
+                .lineSpacing(4 * zoomScale)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .textSelection(.enabled)
         case let .unorderedList(items):
             VStack(alignment: .leading, spacing: 6) {
                 ForEach(items) { item in
-                    MarkdownListRow(marker: "•", text: item.text)
+                    MarkdownListRow(marker: "•", text: item.text, zoomScale: zoomScale)
                 }
             }
         case let .orderedList(items):
             VStack(alignment: .leading, spacing: 6) {
                 ForEach(Array(items.enumerated()), id: \.element.id) { index, item in
-                    MarkdownListRow(marker: "\(index + 1).", text: item.text)
+                    MarkdownListRow(marker: "\(index + 1).", text: item.text, zoomScale: zoomScale)
                 }
             }
         case let .checklist(items):
@@ -57,6 +59,7 @@ private struct MarkdownBlockView: View {
                     MarkdownListRow(
                         marker: item.isChecked ? "checkmark.square.fill" : "square",
                         text: item.text,
+                        zoomScale: zoomScale,
                         usesSystemImage: true
                     )
                 }
@@ -68,9 +71,9 @@ private struct MarkdownBlockView: View {
                     .frame(width: 3)
 
                 Text(attributedText(text))
-                    .font(.body)
+                    .font(scaledFont(13))
                     .foregroundStyle(.secondary)
-                    .lineSpacing(4)
+                    .lineSpacing(4 * zoomScale)
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .textSelection(.enabled)
             }
@@ -79,14 +82,14 @@ private struct MarkdownBlockView: View {
             VStack(alignment: .leading, spacing: 8) {
                 if let language {
                     Text(language)
-                        .font(.caption)
+                        .font(scaledFont(11))
                         .foregroundStyle(.secondary)
                         .textSelection(.enabled)
                 }
 
                 ScrollView(.horizontal) {
                     Text(code)
-                        .font(.system(.body, design: .monospaced))
+                        .font(.system(size: 13 * zoomScale, design: .monospaced))
                         .textSelection(.enabled)
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .padding(12)
@@ -104,20 +107,24 @@ private struct MarkdownBlockView: View {
         (try? AttributedString(markdown: text, options: AttributedString.MarkdownParsingOptions(interpretedSyntax: .inlineOnlyPreservingWhitespace))) ?? AttributedString(text)
     }
 
+    private func scaledFont(_ size: CGFloat) -> Font {
+        .system(size: size * zoomScale)
+    }
+
     private func headingFont(for level: Int) -> Font {
         switch level {
         case 1:
-            .largeTitle
+            scaledFont(34)
         case 2:
-            .title
+            scaledFont(28)
         case 3:
-            .title2
+            scaledFont(22)
         case 4:
-            .title3
+            scaledFont(20)
         case 5:
-            .headline
+            scaledFont(13)
         default:
-            .subheadline
+            scaledFont(12)
         }
     }
 
@@ -129,26 +136,27 @@ private struct MarkdownBlockView: View {
 private struct MarkdownListRow: View {
     let marker: String
     let text: String
+    let zoomScale: Double
     var usesSystemImage = false
 
     var body: some View {
         HStack(alignment: .firstTextBaseline, spacing: 8) {
             if usesSystemImage {
                 Image(systemName: marker)
-                    .font(.body)
+                    .font(scaledFont(13))
                     .foregroundStyle(.secondary)
                     .frame(width: 24, alignment: .trailing)
             } else {
                 Text(marker)
-                    .font(.body)
+                    .font(scaledFont(13))
                     .foregroundStyle(.secondary)
                     .frame(width: 24, alignment: .trailing)
                     .textSelection(.enabled)
             }
 
             Text(attributedText(text))
-                .font(.body)
-                .lineSpacing(4)
+                .font(scaledFont(13))
+                .lineSpacing(4 * zoomScale)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .textSelection(.enabled)
         }
@@ -156,6 +164,10 @@ private struct MarkdownListRow: View {
 
     private func attributedText(_ text: String) -> AttributedString {
         (try? AttributedString(markdown: text, options: AttributedString.MarkdownParsingOptions(interpretedSyntax: .inlineOnlyPreservingWhitespace))) ?? AttributedString(text)
+    }
+
+    private func scaledFont(_ size: CGFloat) -> Font {
+        .system(size: size * zoomScale)
     }
 }
 

@@ -1,7 +1,18 @@
 import Quartz
 import SwiftUI
 
-struct QuickLookViewer: NSViewRepresentable {
+struct QuickLookViewer: View {
+    let url: URL
+    let zoomScale: Double
+
+    var body: some View {
+        QuickLookPreview(url: url)
+            .scaleEffect(zoomScale)
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+    }
+}
+
+private struct QuickLookPreview: NSViewRepresentable {
     let url: URL
 
     func makeNSView(context: Context) -> QLPreviewView {

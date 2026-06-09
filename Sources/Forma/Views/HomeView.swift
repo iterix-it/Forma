@@ -57,7 +57,6 @@ struct HomeView: View {
             Spacer(minLength: 40)
         }
         .padding(32)
-        .background(.regularMaterial)
         .alert("Cannot Open Content", isPresented: errorBinding) {
             Button("OK", role: .cancel) {
                 appState.errorMessage = nil

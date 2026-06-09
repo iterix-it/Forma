@@ -9,8 +9,13 @@ final class AppState: ObservableObject {
     @Published var errorMessage: String?
     @Published var isDropTargeted = false
 
+    private let recentItemsKey = "recentItems"
     private let loader = FileLoader()
     private let detector = ContentDetector()
+
+    init() {
+        loadRecentItems()
+    }
 
     func openFile() async {
         guard let fileURL = loader.pickFile() else {
@@ -84,6 +89,29 @@ final class AppState: ObservableObject {
 
         if recentItems.count > 8 {
             recentItems.removeLast(recentItems.count - 8)
+        }
+
+        saveRecentItems()
+    }
+
+    private func loadRecentItems() {
+        guard let data = UserDefaults.standard.data(forKey: recentItemsKey) else {
+            return
+        }
+
+        do {
+            recentItems = try JSONDecoder().decode([RecentContentItem].self, from: data)
+        } catch {
+            UserDefaults.standard.removeObject(forKey: recentItemsKey)
+        }
+    }
+
+    private func saveRecentItems() {
+        do {
+            let data = try JSONEncoder().encode(recentItems)
+            UserDefaults.standard.set(data, forKey: recentItemsKey)
+        } catch {
+            UserDefaults.standard.removeObject(forKey: recentItemsKey)
         }
     }
 }

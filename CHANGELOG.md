@@ -8,6 +8,9 @@
 - Registered Forma as an alternate macOS viewer for documents, text, images, PDFs, CSV/TSV, Markdown, JSON, XML, and YAML files.
 - Fixed file handoff from Finder so selected files open directly inside Forma instead of only launching the app.
 - Added a structured Markdown viewer for headings, lists, checklists, quotes, dividers, and fenced code blocks.
+- Added zoom controls and keyboard shortcuts for supported viewers.
+- Made recent files persist across app launches.
+- Made the home background consistent with the window background.
 - Updated bundle metadata to version 0.1.2.
 
 ### Download

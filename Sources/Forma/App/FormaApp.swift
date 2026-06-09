@@ -75,6 +75,40 @@ struct FormaApp: App {
                 }
                 .keyboardShortcut("o", modifiers: [.command])
             }
+
+            ViewerZoomCommands()
+        }
+    }
+}
+
+struct ViewerZoomCommands: Commands {
+    @FocusedValue(\.viewerZoomScale) private var zoomScale
+
+    var body: some Commands {
+        CommandMenu("View") {
+            Button("Zoom In") {
+                if let zoomScale {
+                    ViewerZoom.zoomIn(zoomScale)
+                }
+            }
+            .keyboardShortcut("+", modifiers: [.command])
+            .disabled(zoomScale == nil)
+
+            Button("Zoom Out") {
+                if let zoomScale {
+                    ViewerZoom.zoomOut(zoomScale)
+                }
+            }
+            .keyboardShortcut("-", modifiers: [.command])
+            .disabled(zoomScale == nil)
+
+            Button("Actual Size") {
+                if let zoomScale {
+                    ViewerZoom.reset(zoomScale)
+                }
+            }
+            .keyboardShortcut("0", modifiers: [.command])
+            .disabled(zoomScale == nil)
         }
     }
 }

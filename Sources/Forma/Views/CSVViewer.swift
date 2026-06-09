@@ -4,6 +4,7 @@ import SwiftUI
 struct CSVViewer: View {
     let url: URL
     let searchText: String
+    let zoomScale: Double
 
     @State private var rows: [[String]] = []
     @State private var isTruncated = false
@@ -32,7 +33,7 @@ struct CSVViewer: View {
 
                     tableSummary
 
-                    CSVTableView(rows: visibleRows)
+                    CSVTableView(rows: visibleRows, zoomScale: zoomScale)
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
                 }
             }
@@ -115,6 +116,7 @@ struct CSVViewer: View {
 
 struct CSVTableView: NSViewRepresentable {
     let rows: [[String]]
+    let zoomScale: Double
 
     func makeCoordinator() -> Coordinator {
         Coordinator()
@@ -142,7 +144,7 @@ struct CSVTableView: NSViewRepresentable {
     }
 
     func updateNSView(_ scrollView: NSScrollView, context: Context) {
-        context.coordinator.update(rows: rows)
+        context.coordinator.update(rows: rows, zoomScale: zoomScale)
     }
 
     @MainActor
@@ -150,10 +152,13 @@ struct CSVTableView: NSViewRepresentable {
         weak var tableView: NSTableView?
         private var headers: [String] = []
         private var dataRows: [[String]] = []
+        private var zoomScale = ViewerZoom.defaultScale
 
-        func update(rows: [[String]]) {
+        func update(rows: [[String]], zoomScale: Double) {
             headers = rows.first ?? []
             dataRows = Array(rows.dropFirst())
+            self.zoomScale = zoomScale
+            tableView?.rowHeight = 32 * zoomScale
             rebuildColumns()
             tableView?.reloadData()
 
@@ -176,7 +181,7 @@ struct CSVTableView: NSViewRepresentable {
             textField.stringValue = value
             textField.lineBreakMode = .byTruncatingTail
             textField.maximumNumberOfLines = 2
-            textField.font = .systemFont(ofSize: NSFont.smallSystemFontSize)
+            textField.font = .systemFont(ofSize: NSFont.smallSystemFontSize * zoomScale)
             textField.textColor = .labelColor
             textField.translatesAutoresizingMaskIntoConstraints = false
 
@@ -215,8 +220,9 @@ struct CSVTableView: NSViewRepresentable {
                 let column = NSTableColumn(identifier: NSUserInterfaceItemIdentifier("column-\(index)"))
                 column.title = headers[index].isEmpty ? "Column \(index + 1)" : headers[index]
                 column.width = preferredWidth(for: index)
-                column.minWidth = 90
-                column.maxWidth = 360
+                column.minWidth = 90 * zoomScale
+                column.maxWidth = 360 * zoomScale
+                column.headerCell.font = .systemFont(ofSize: NSFont.smallSystemFontSize * zoomScale, weight: .semibold)
                 tableView.addTableColumn(column)
             }
         }
@@ -227,7 +233,12 @@ struct CSVTableView: NSViewRepresentable {
             }
 
             for index in headers.indices where index < tableView.tableColumns.count {
-                tableView.tableColumns[index].title = headers[index].isEmpty ? "Column \(index + 1)" : headers[index]
+                let column = tableView.tableColumns[index]
+                column.title = headers[index].isEmpty ? "Column \(index + 1)" : headers[index]
+                column.width = preferredWidth(for: index)
+                column.minWidth = 90 * zoomScale
+                column.maxWidth = 360 * zoomScale
+                column.headerCell.font = .systemFont(ofSize: NSFont.smallSystemFontSize * zoomScale, weight: .semibold)
             }
         }
 
@@ -237,7 +248,7 @@ struct CSVTableView: NSViewRepresentable {
                 .compactMap { $0[safe: columnIndex]?.count }
                 .max() ?? 0
             let length = max(headerLength, min(sampleLength, 34))
-            return CGFloat(max(120, min(280, length * 8 + 36)))
+            return CGFloat(max(120, min(280, length * 8 + 36))) * zoomScale
         }
     }
 }
